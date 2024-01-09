@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import { TPokemon } from './types/pokemon.type';
+import { Fiche } from './components/fiche';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [data, setData] = useState<TPokemon>();
+	const [nomNo, setNomNo] = useState<string | number>(81);
+
+	useEffect(() => {
+		const url = 'https://tyradex.tech/api/v1/pokemon/' + nomNo;
+
+		const options = {
+			headers: {
+				'User-Agent': 'RobotPokemon',
+				From: 'adresse[at]domaine[dot]com',
+				'Content-type': 'application/json',
+			},
+		};
+
+		fetch(url, options)
+			.then((response) => response.json())
+			.then((data) => {
+				setData(data);
+			})
+			.catch((error) => `${error}`);
+	}, []);
+
+	console.log(data);
+
+	return (
+		<div>
+			<header></header>
+			<body>{data && <Fiche data={data!}></Fiche>}</body>
+		</div>
+	);
 }
 
 export default App;
