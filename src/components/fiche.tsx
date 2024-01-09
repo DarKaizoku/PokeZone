@@ -1,35 +1,34 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TPokemon } from '../types/pokemon.type';
 import { RectangleStats } from './rectangleStats';
 import { Resistance } from './resistance';
 import { TypeP } from './typeP';
 import { RefPokemonContext } from '../contexts/refPokemon.context';
+import { ShowPicture } from './showPicture';
 
 export function Fiche(props: { DATA: TPokemon }) {
 	const { DATA } = props;
 	const { setRefPokemon } = useContext(RefPokemonContext);
 
 	const [clickOne, setClickOne] = useState<boolean>(false);
+	/* 
 	const [shiny, setShiny] = useState<boolean>(
 		DATA.sprites.shiny ? true : false
-	);
+	); */
+
 	const [showShiny, setShowShiny] = useState<boolean>(false);
 
-	const gmax: boolean = DATA.sprites.gmax?.regular ? true : false;
+	const [gmax, setGmax] = useState<boolean>(
+		DATA.sprites.gmax?.regular ? true : false
+	);
 
 	const [showGmax, setShowGmax] = useState<boolean>(false);
 
-	/*function image(url : string, listImage:TSprite){
-
-        if(listImage.shiny == null && listImage.gmax == null) return url
-
-        let result = url
-
-        if(url == listImage.regular)
-        return listImage.shiny != null ? listImage.shiny
-
-        
-    }*/
+	useEffect(() => {
+		showShiny && setShowShiny(false);
+		setGmax(DATA.sprites.gmax?.regular ? true : false);
+		setShowGmax(false);
+	}, [props]);
 
 	return (
 		<div
@@ -54,21 +53,17 @@ export function Fiche(props: { DATA: TPokemon }) {
 			<h4 className='card-title text-center'>
 				<a href='//'>{DATA.name.fr}</a>
 			</h4>
-			{shiny && (
-				<button
-					className='btn btn-warning'
-					onClick={() =>
-						setShowShiny(!showShiny)
-					}>
-					{!showShiny
-						? 'Afficher ' +
-						  DATA.name.fr +
-						  ' Shiny'
-						: 'Ne plus afficher ' +
-						  DATA.name.fr +
-						  ' Shiny'}
-				</button>
-			)}
+			<TypeP data={DATA.types} />
+
+			<button
+				className='btn btn-warning'
+				onClick={() => setShowShiny(!showShiny)}>
+				{!showShiny
+					? 'Afficher ' + DATA.name.fr + ' Shiny'
+					: 'Ne plus afficher ' +
+					  DATA.name.fr +
+					  ' Shiny'}
+			</button>
 			{gmax && (
 				<button
 					className='btn btn-success'
@@ -82,8 +77,7 @@ export function Fiche(props: { DATA: TPokemon }) {
 						  ' Gmax'}
 				</button>
 			)}
-			<TypeP data={DATA.types} />
-			<img
+			{/* <img
 				className='card-img-top'
 				src={
 					DATA.sprites.regular != null
@@ -92,8 +86,24 @@ export function Fiche(props: { DATA: TPokemon }) {
 				}
 				onClick={() => setClickOne(!clickOne)}
 				alt={DATA.name.fr ? DATA.name.fr : 'unkown'}
-			/>
+			/> */}
+			{!showShiny && (
+				<ShowPicture
+					mode={'regular'}
+					DATA={DATA}
+					clickOne={clickOne}
+					setClickOne={setClickOne}
+				/>
+			)}
 			{showShiny && (
+				<ShowPicture
+					mode={'shiny'}
+					DATA={DATA}
+					clickOne={clickOne}
+					setClickOne={setClickOne}
+				/>
+			)}
+			{/* {showShiny && (
 				<img
 					className='card-img-top'
 					src={DATA.sprites.shiny!!}
@@ -104,8 +114,17 @@ export function Fiche(props: { DATA: TPokemon }) {
 							: 'unkown'
 					}
 				/>
-			)}
+			)} */}
 			{showGmax && (
+				<ShowPicture
+					mode={'gmax'}
+					DATA={DATA}
+					clickOne={clickOne}
+					setClickOne={setClickOne}
+				/>
+			)}
+
+			{/* {showGmax && (
 				<img
 					className='card-img-top'
 					src={
@@ -121,7 +140,7 @@ export function Fiche(props: { DATA: TPokemon }) {
 							: 'unkown'
 					}
 				/>
-			)}
+			)} */}
 
 			<div className='card-body container'>
 				{/* <h4 className='card-title'>

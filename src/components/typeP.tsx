@@ -11,5 +11,5 @@ export function TypeP(props: { data: TType[] }) {
 		/>
 	));
 
-	return <div className='col text-center me-1'>{affichage}</div>;
+	return <div className='col text-center me-2 mb-2'>{affichage}</div>;
 }
