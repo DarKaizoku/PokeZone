@@ -70,8 +70,6 @@ export function RectangleStats(props: { stats: TStats }) {
 		cpt++;
 	}
 
-	console.log(lotDiv[0]);
-
 	return (
 		<div>
 			<h4
